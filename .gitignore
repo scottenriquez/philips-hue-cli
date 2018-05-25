@@ -1,3 +1,6 @@
+# CLI local storage
+local-bridge-connection-config.json
+
 # Logs
 logs
 *.log

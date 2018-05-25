@@ -8,6 +8,14 @@ program
     .description('Philips Hue CLI');
 
 program
+    .command('init')
+    .alias('i')
+    .description('Initialize connection')
+    .action(() => {
+        service.initialize();
+    });
+
+program
     .command('on')
     .alias('n')
     .description('Turn on all lights')

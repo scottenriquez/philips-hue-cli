@@ -29,6 +29,7 @@
   "homepage": "https://github.com/scottenriquez/philips-hue-cli#readme",
   "dependencies": {
     "commander": "^2.15.1",
+    "huejay": "^1.8.3",
     "inquirer": "^5.2.0"
   },
   "devDependencies": {

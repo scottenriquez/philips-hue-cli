@@ -30,15 +30,47 @@ const initialize = () => {
                 console.log(`An error occurred: ${error.message}`);
             });
     };
-    localConnectionConfigService.validateLocalConnectionConfigSync(successCallback, failCallback);
+    localConnectionConfigService.readLocalConnectionConfigSync(successCallback, failCallback);
 };
 
 const turnAllOn = () => {
-    return true;
+    const successCallback = (localConnectionConfig) => {
+        const hueClient = new huejay.Client({
+            host: localConnectionConfig.bridgeIP,
+            username: localConnectionConfig.cliAuthenticatedUser
+        });
+        hueClient.lights.getAll()
+            .then(lights => {
+                for (let light of lights) {
+                    light.on = true;
+                    hueClient.lights.save(light);
+                }
+            });
+    };
+    const failCallback = () => {
+        console.log('Unable to retrieve local connection profile. Please run "philips-hue-cli i" to create one.');
+    };
+    localConnectionConfigService.readLocalConnectionConfigSync(successCallback, failCallback);
 };
 
 const turnAllOff = () => {
-    return false;
+    const successCallback = (localConnectionConfig) => {
+        const hueClient = new huejay.Client({
+            host: localConnectionConfig.bridgeIP,
+            username: localConnectionConfig.cliAuthenticatedUser
+        });
+        hueClient.lights.getAll()
+            .then(lights => {
+                for (let light of lights) {
+                    light.on = false;
+                    hueClient.lights.save(light);
+                }
+            });
+    };
+    const failCallback = () => {
+        console.log('Unable to retrieve local connection profile. Please run "philips-hue-cli i" to create one.');
+    };
+    localConnectionConfigService.readLocalConnectionConfigSync(successCallback, failCallback);
 };
 
 module.exports = { initialize, turnAllOn, turnAllOff };

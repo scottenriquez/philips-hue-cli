@@ -2,10 +2,17 @@ const huejay = require('huejay');
 const localConnectionConfigService = require('./localConnectionConfigService');
 
 const initialize = () => {
-    const successCallback = () => {
+    const writeSuccessCallback = () => {
+        console.log('Local bridge connection profile saved successfully.');
+    };
+    const writeFailCallback = (error) => {
+        console.log('There has been an error while saving your configuration data.');
+        console.log(error.message);
+    };
+    const readSuccessCallback = () => {
         console.log('Local bridge connection profile already exists.');
     };
-    const failCallback = () => {
+    const readFailCallback = () => {
         huejay.discover()
             .then(bridges => {
                 for (let bridge of bridges) {
@@ -17,11 +24,11 @@ const initialize = () => {
                         .then(user => {
                             console.log(`Created new user named: ${user.username}`);
                             const fileData =  JSON.stringify({bridgeIP: bridge.ip, cliAuthenticatedUser: user.username});
-                            localConnectionConfigService.writeLocalConnectionConfig(fileData);
+                            localConnectionConfigService.writeLocalConnectionConfigSync(fileData, writeSuccessCallback, writeFailCallback);
                         })
                         .catch(error => {
                             if (error instanceof huejay.Error && error.type === 101) {
-                                return console.log('Unable to create user. Press the link button on your Hue bridge while running the initialize command.');
+                                console.log('Unable to create user. Press the link button on your Hue bridge while running the initialize command.');
                             }
                         });
                 }
@@ -30,7 +37,7 @@ const initialize = () => {
                 console.log(`An error occurred: ${error.message}`);
             });
     };
-    localConnectionConfigService.readLocalConnectionConfigSync(successCallback, failCallback);
+    localConnectionConfigService.readLocalConnectionConfigSync(readSuccessCallback, readFailCallback);
 };
 
 const turnAllOn = () => {

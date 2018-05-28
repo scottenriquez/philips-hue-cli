@@ -1,26 +1,24 @@
 const fileSystem = require('fs');
 const LOCAL_BRIDGE_CONNECTION_PROFILE_PATH = './local-bridge-connection-config.json';
 
-const readLocalConnectionConfigSync = (successCallback, failCallback) => {
+const readLocalConnectionConfigSync = (readSuccessCallback, readFailCallback) => {
     fileSystem.readFile(LOCAL_BRIDGE_CONNECTION_PROFILE_PATH, (error, data) => {
         if (error || !JSON.parse(data)) {
-            failCallback();
+            readFailCallback();
         }
         else {
-            successCallback(JSON.parse(data));
+            readSuccessCallback(JSON.parse(data));
         }
     });
 };
 
-const writeLocalConnectionConfig = (fileData) => {
+const writeLocalConnectionConfigSync = (fileData, writeSuccessCallback, writeFailCallback) => {
     fileSystem.writeFile(LOCAL_BRIDGE_CONNECTION_PROFILE_PATH, fileData, function (error) {
         if (error) {
-            console.log('There has been an error while saving your configuration data.');
-            console.log(error.message);
-            return;
+            writeFailCallback(error);
         }
-        console.log('Local bridge connection profile saved successfully.')
+        writeSuccessCallback();
     });
 };
 
-module.exports = { readLocalConnectionConfigSync, writeLocalConnectionConfig };
+module.exports = { readLocalConnectionConfigSync, writeLocalConnectionConfigSync };

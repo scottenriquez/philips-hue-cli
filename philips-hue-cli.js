@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-const program = require('commander');
-const service = require('./philips-hue-service');
+const commandLine = require('commander');
+const service = require('./services/philipsHueService');
 
-program
+commandLine
     .version('0.0.1')
     .description('Philips Hue CLI');
 
-program
+commandLine
     .command('init')
     .alias('i')
     .description('Initialize connection')
@@ -15,7 +15,7 @@ program
         service.initialize();
     });
 
-program
+commandLine
     .command('on')
     .alias('n')
     .description('Turn on all lights')
@@ -23,7 +23,7 @@ program
         service.turnAllOn();
     });
 
-program
+commandLine
     .command('off')
     .alias('f')
     .description('Turn off all lights')
@@ -31,4 +31,4 @@ program
         service.turnAllOff();
     });
 
-program.parse(process.argv);
+commandLine.parse(process.argv);
